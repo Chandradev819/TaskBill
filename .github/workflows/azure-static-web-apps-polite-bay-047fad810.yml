@@ -15,19 +15,23 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Setup .NET
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
 
-      - name: Restore
-        run: dotnet restore TaskBill.sln
+      - name: Restore dependencies
+        run: dotnet restore TaskBill.csproj
 
-      - name: Publish
+      - name: Build the app
+        run: dotnet build TaskBill.csproj --configuration Release --no-restore
+
+      - name: Publish the app
         run: |
-          dotnet publish TaskBill/TaskBill.csproj -c Release -o release \
+          dotnet publish TaskBill.csproj -c Release -o release \
             -p:PublishTrimmed=true \
             -p:LinkerEnabled=true \
             -p:InvariantGlobalization=true \
@@ -39,7 +43,7 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_POLITE_BAY_047FAD810 }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "/" 
+          app_location: "/" # Project root
           output_location: "release/wwwroot"
 
   close_pull_request_job:
