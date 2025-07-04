@@ -13,39 +13,46 @@ jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
-    name: Build and Deploy Blazor WASM
+    name: Build and Deploy Job
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          submodules: true
+          lfs: false
 
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x' # Use .NET 9.0
+          dotnet-version: '9.0.x' # Ensure this matches your SDK version
 
-      - name: Publish Blazor WASM App
+      - name: Restore dependencies
+        run: dotnet restore ./TaskBill.csproj
+
+      - name: Publish Blazor WebAssembly App
         run: |
-          dotnet publish ./TaskBill/TaskBill.csproj -c Release -o release \
+          dotnet publish ./TaskBill.csproj -c Release -o release \
             -p:PublishTrimmed=true \
             -p:LinkerEnabled=true \
             -p:InvariantGlobalization=true \
             -p:BlazorEnableTimeZoneSupport=false
 
-      - name: Deploy to Azure Static Web App
+      - name: Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_POLITE_BAY_047FAD810 }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "/"                  # path to repo root
-          output_location: "release/wwwroot" # published output
+          app_location: "/"              # Root of the repo
+          api_location: "Api"            # Optional - set if you have Azure Functions
+          output_location: "release/wwwroot"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
-    name: Close Pull Request
+    name: Close Pull Request Job
     steps:
-      - name: Close PR
+      - name: Close Pull Request
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_POLITE_BAY_047FAD810 }}
