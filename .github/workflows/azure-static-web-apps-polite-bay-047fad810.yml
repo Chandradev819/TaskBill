@@ -30,7 +30,7 @@ jobs:
         run: dotnet restore
 
       - name: Publish Blazor WASM with Trimming
-        run: dotnet publish YourProject.csproj -c Release -o release \
+        run: dotnet publish TaskBill.csproj -c Release -o release \
              -p:PublishTrimmed=true \
              -p:LinkerEnabled=true \
              -p:InvariantGlobalization=true \
