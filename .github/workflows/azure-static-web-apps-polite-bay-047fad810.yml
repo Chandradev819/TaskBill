@@ -20,12 +20,14 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x' # use appropriate version
+          dotnet-version: '9.0.x'
 
-      - name: Publish Blazor App
+      - name: Restore
+        run: dotnet restore TaskBill.sln
+
+      - name: Publish
         run: |
-          dotnet restore ./TaskBill/TaskBill.sln
-          dotnet publish ./TaskBill/TaskBill.csproj -c Release -o release \
+          dotnet publish TaskBill/TaskBill.csproj -c Release -o release \
             -p:PublishTrimmed=true \
             -p:LinkerEnabled=true \
             -p:InvariantGlobalization=true \
