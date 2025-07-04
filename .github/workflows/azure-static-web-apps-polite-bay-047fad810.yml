@@ -24,9 +24,9 @@ jobs:
         with:
           dotnet-version: 9.0.x
 
-      - name: 📦 Publish Blazor WASM Project
+      - name: 📦 Publish Blazor WASM
         run: |
-          dotnet publish ./TaskBill/TaskBill.csproj -c Release -o release \
+          dotnet publish TaskBill.csproj -c Release -o release \
             -p:PublishTrimmed=true \
             -p:LinkerEnabled=true \
             -p:InvariantGlobalization=true \
@@ -38,14 +38,13 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_POLITE_BAY_047FAD810 }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "TaskBill"                # Path to your project folder
-          output_location: "release/wwwroot"      # Where index.html is generated
+          app_location: "."                        # Root project folder
+          output_location: "release/wwwroot"       # Output from publish
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
     name: Close Pull Request Job
-
     steps:
       - name: 🚫 Close Pull Request
         uses: Azure/static-web-apps-deploy@v1
