@@ -6,13 +6,19 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
   </PropertyGroup>
-  
+
   <PropertyGroup>
-  <PublishTrimmed>true</PublishTrimmed>
-  <InvariantGlobalization>true</InvariantGlobalization>
-  <BlazorEnableTimeZoneSupport>false</BlazorEnableTimeZoneSupport>
-  <BlazorWebAssemblyPreserveCollationData>false</BlazorWebAssemblyPreserveCollationData>
-</PropertyGroup>
+    <PublishTrimmed>true</PublishTrimmed>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <BlazorEnableTimeZoneSupport>false</BlazorEnableTimeZoneSupport>
+    <BlazorWebAssemblyPreserveCollationData>false</BlazorWebAssemblyPreserveCollationData>
+
+    <!-- Optional for deterministic build output -->
+    <Deterministic>true</Deterministic>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <BlazorCacheBootResources>true</BlazorCacheBootResources>
+  </PropertyGroup>
+
 
 
   <ItemGroup>
